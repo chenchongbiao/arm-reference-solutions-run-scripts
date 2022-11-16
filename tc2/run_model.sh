@@ -145,7 +145,7 @@ case $DISTRO in
     buildroot)
 		DISTRO_MODEL_PARAMS="--data board.dram=${DEPLOY_DIR}/tc-fitImage.bin@0x20000000"
         BL1_IMAGE_FILE="$DEPLOY_DIR/bl1-tc.bin"
-        FIP_IMAGE_FILE="$DEPLOY_DIR/fip-tc.bin"
+        FIP_IMAGE_FILE="$DEPLOY_DIR/fip_gpt-tc.bin"
         ;;
     android-swr)
 		DISTRO_MODEL_PARAMS="-C board.mmc.p_mmc_file=$DEPLOY_DIR/android.img"

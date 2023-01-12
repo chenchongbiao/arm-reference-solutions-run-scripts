@@ -177,8 +177,21 @@ fi
 LOGS_DIR="$RUN_SCRIPTS_DIR"/logs
 mkdir -p $LOGS_DIR
 
+FIP_MAX_SIZE=35651584 #34 MB
+FIP_SIZE=$(wc -c $FIP_IMAGE_FILE | awk '{print $1}')
+
+if [ $FIP_SIZE -le $FIP_MAX_SIZE ]
+then
+        srec_cat \
+        $FIP_IMAGE_FILE -Binary -offset 0x0 \
+        $RSS_FLASH_FILE -Binary -offset 0x2200000 \
+        -o $DEPLOY_DIR/host_flash.bin -Binary
+else
+	echo "Error: FIP size ($FIP_SIZE) is more than supported($FIP_MAX_SIZE)" >> /dev/stderr
+	exit 1
+fi
+
 "$MODEL" \
-    -C board.flashloader0.fname=${FIP_IMAGE_FILE} \
     -C soc.pl011_uart0.out_file=$LOGS_DIR/uart0_soc.log \
     -C soc.pl011_uart0.unbuffered_output=1 \
     -C soc.pl011_uart1.out_file=$LOGS_DIR/uart1_soc.log \
@@ -187,7 +200,7 @@ mkdir -p $LOGS_DIR
     -C css.pl011_uart_ap.unbuffered_output=1 \
     -C displayController=2 \
     --data css.rss.cpu=${RSS_ROM_FILE}@0x11000000 \
-    --data css.rss.cpu=${RSS_FLASH_FILE}@0x31000000 \
+    -C board.flashloader0.fname=${DEPLOY_DIR}/host_flash.bin \
     -C css.rss.VMADDRWIDTH=23 \
     -C css.scp.c0_pik.rvbaraddr_lw=0x1000 \
     -C css.scp.c0_pik.rvbaraddr_up=0x0000 \

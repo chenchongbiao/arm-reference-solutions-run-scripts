@@ -39,6 +39,8 @@ help_text () {
 	echo "-d, --distro				distro version, values supported [buildroot, android-swr]"
 	echo "-a, --avb				[OPTIONAL] avb boot, values supported [true, false], DEFAULT: false"
 	echo "-t, --tap-interface			[OPTIONAL] tap interface"
+	echo "-n, --networking			[OPTIONAL] networking, values supported [user, tap, none]"
+	echo "					DEFAULT: tap if tap interface provided, otherwise user"
 	echo "-e, --extra-model-params		[OPTIONAL] extra model parameters"
 	exit 1
 }
@@ -84,6 +86,7 @@ check_android_images () {
 }
 
 AVB=false
+NETWORKING=user
 
 while [[ $# -gt 0 ]]
 do
@@ -102,6 +105,12 @@ do
 		    ;;
 	    -t|--tap-interface)
 		    TAP_INTERFACE="$2"
+		    NETWORKING=tap
+		    shift
+		    shift
+		    ;;
+	    -n|--networking)
+		    NETWORKING="$2"
 		    shift
 		    shift
 		    ;;
@@ -126,6 +135,7 @@ done
 [ -z "$MODEL" ] && incorrect_script_use || echo "MODEL=$MODEL"
 [ -z "$DISTRO" ] && incorrect_script_use || echo "DISTRO=$DISTRO"
 echo "TAP_INTERFACE=$TAP_INTERFACE"
+echo "NETWORKING=$NETWORKING"
 echo "EXTRA_MODEL_PARAMS=$EXTRA_MODEL_PARAMS"
 echo "AVB=$AVB"
 
@@ -165,13 +175,25 @@ esac
 
 echo "DISTRO_MODEL_PARAMS=$DISTRO_MODEL_PARAMS"
 
-if [ "$TAP_INTERFACE" ]
-then
+case $NETWORKING in
+    tap)
 	echo "Enabling networking with interface $TAP_INTERFACE"
-	TAP_INTERFACE_MODEL_PARAMS="-C board.hostbridge.interfaceName="$TAP_INTERFACE" \
+	NETWORKING_MODEL_PARAMS="-C board.hostbridge.interfaceName="$TAP_INTERFACE" \
 	-C board.smsc_91c111.enabled=1 \
 	"
-fi
+	;;
+    user)
+	echo "Enabling user networking"
+	NETWORKING_MODEL_PARAMS="-C board.smsc_91c111.enabled=1 \
+	-C board.hostbridge.userNetworking=1 \
+	-C board.hostbridge.userNetPorts=\"5555=5555,8080=80,8022=22\""
+	;;
+    none)
+	;;
+    *)
+	echo "bad option for networking: $NETWORKING"; incorrect_script_use
+	;;
+esac
 
 LOGS_DIR="$RUN_SCRIPTS_DIR"/logs
 mkdir -p $LOGS_DIR
@@ -190,7 +212,7 @@ mkdir -p $LOGS_DIR
     -C css.rss.CMU0_NUM_DB_CH=16 \
     -C css.scp.c0_pik.rvbaraddr_lw=0x1000 \
     -C css.scp.c0_pik.rvbaraddr_up=0x0000 \
-    ${TAP_INTERFACE_MODEL_PARAMS} \
+    ${NETWORKING_MODEL_PARAMS} \
     ${DISTRO_MODEL_PARAMS} \
     ${EXTRA_MODEL_PARAMS}
 

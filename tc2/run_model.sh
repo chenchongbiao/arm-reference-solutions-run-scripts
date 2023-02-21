@@ -187,6 +187,7 @@ mkdir -p $LOGS_DIR
     -C displayController=2 \
     --data css.rss.cpu=${RSS_ROM_FILE}@0x11000000 \
     -C css.rss.VMADDRWIDTH=23 \
+    -C css.rss.CMU0_NUM_DB_CH=16 \
     -C css.scp.c0_pik.rvbaraddr_lw=0x1000 \
     -C css.scp.c0_pik.rvbaraddr_up=0x0000 \
     ${TAP_INTERFACE_MODEL_PARAMS} \

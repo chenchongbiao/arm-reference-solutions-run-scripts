@@ -180,10 +180,10 @@ mkdir -p $LOGS_DIR
     -C board.flashloader0.fname=${FIP_IMAGE_FILE} \
     -C soc.pl011_uart0.out_file=$LOGS_DIR/uart0_soc.log \
     -C soc.pl011_uart0.unbuffered_output=1 \
-    -C soc.pl011_uart1.out_file=$LOGS_DIR/uart1_soc.log \
-    -C soc.pl011_uart1.unbuffered_output=1 \
     -C css.pl011_uart_ap.out_file=$LOGS_DIR/uart_ap.log \
     -C css.pl011_uart_ap.unbuffered_output=1 \
+    -C css.pl011_uart1_ap.out_file=$LOGS_DIR/uart1_ap.log \
+    -C css.pl011_uart1_ap.unbuffered_output=1 \
     -C displayController=2 \
     --data css.rss.cpu=${RSS_ROM_FILE}@0x11000000 \
     -C css.rss.VMADDRWIDTH=23 \

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021, ARM Limited and Contributors. All rights reserved.
+# Copyright (c) 2021-2023, ARM Limited and Contributors. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -138,14 +138,12 @@ DEPLOY_DIR=$RUN_SCRIPTS_DIR/../../build-scripts/output/deploy/tc2/
 
 check_dir_exists_and_exit $DEPLOY_DIR "firmware and kernel images"
 
-RSS_ROM_FILE="$DEPLOY_DIR/rss_rom.bin"
-RSS_FLASH_FILE="$DEPLOY_DIR/rss_flash.bin"
-
 case $DISTRO in
     buildroot)
 		DISTRO_MODEL_PARAMS="--data board.dram=${DEPLOY_DIR}/tc-fitImage.bin@0x20000000"
         BL1_IMAGE_FILE="$DEPLOY_DIR/bl1-tc.bin"
         FIP_IMAGE_FILE="$DEPLOY_DIR/fip_gpt-tc.bin"
+        RSS_ROM_FILE="$DEPLOY_DIR/rss_rom.bin"
         ;;
     android-swr)
 		DISTRO_MODEL_PARAMS="-C board.mmc.p_mmc_file=$DEPLOY_DIR/android.img"
@@ -154,6 +152,7 @@ case $DISTRO in
 			--data board.dram=$DEPLOY_DIR/Image@0x80000 "
         BL1_IMAGE_FILE="$DEPLOY_DIR/bl1-trusty-tc.bin"
         FIP_IMAGE_FILE="$DEPLOY_DIR/fip-trusty-tc.bin"
+        RSS_ROM_FILE="$DEPLOY_DIR/rss_trusty_rom.bin"
 
 	DISTRO_MODEL_PARAMS="${DISTRO_MODEL_PARAMS} \
 	-C board.smsc_91c111.enabled=1 \
@@ -187,8 +186,8 @@ mkdir -p $LOGS_DIR
     -C css.pl011_uart_ap.unbuffered_output=1 \
     -C displayController=2 \
     --data css.rss.cpu=${RSS_ROM_FILE}@0x11000000 \
-    --data css.rss.cpu=${RSS_FLASH_FILE}@0x31000000 \
     -C css.rss.VMADDRWIDTH=23 \
+    -C css.rss.CMU0_NUM_DB_CH=16 \
     -C css.scp.c0_pik.rvbaraddr_lw=0x1000 \
     -C css.scp.c0_pik.rvbaraddr_up=0x0000 \
     ${TAP_INTERFACE_MODEL_PARAMS} \

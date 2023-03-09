@@ -195,16 +195,23 @@ case $NETWORKING in
 	;;
 esac
 
-LOGS_DIR="$RUN_SCRIPTS_DIR"/logs
-mkdir -p $LOGS_DIR
+# using an absolute path to be able to run script from any
+# directory without breaking a softlink
+LOGS_DIR="$(realpath --no-symlinks "$(dirname "${BASH_SOURCE[0]}")")"/logs
+BOOT_LOGS_DIR=$LOGS_DIR/$DISTRO/$(date +"%Y_%m_%d_%I_%M_%p")
+LATEST_LOGS=$LOGS_DIR/$DISTRO/latest
+# delete latest logs from last run
+rm -f $LATEST_LOGS
+mkdir -p $BOOT_LOGS_DIR
+ln -s $BOOT_LOGS_DIR $LATEST_LOGS
 
 "$MODEL" \
     -C board.flashloader0.fname=${FIP_IMAGE_FILE} \
-    -C soc.pl011_uart0.out_file=$LOGS_DIR/uart0_soc.log \
+    -C soc.pl011_uart0.out_file=$BOOT_LOGS_DIR/uart0_soc.log \
     -C soc.pl011_uart0.unbuffered_output=1 \
-    -C css.pl011_uart_ap.out_file=$LOGS_DIR/uart_ap.log \
+    -C css.pl011_uart_ap.out_file=$BOOT_LOGS_DIR/uart_ap.log \
     -C css.pl011_uart_ap.unbuffered_output=1 \
-    -C css.pl011_uart1_ap.out_file=$LOGS_DIR/uart1_ap.log \
+    -C css.pl011_uart1_ap.out_file=$BOOT_LOGS_DIR/uart1_ap.log \
     -C css.pl011_uart1_ap.unbuffered_output=1 \
     -C displayController=2 \
     --data css.rss.cpu=${RSS_ROM_FILE}@0x11000000 \

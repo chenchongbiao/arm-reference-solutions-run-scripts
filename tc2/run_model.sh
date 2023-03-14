@@ -214,7 +214,7 @@ ln -s $BOOT_LOGS_DIR $LATEST_LOGS
     -C css.pl011_uart1_ap.out_file=$BOOT_LOGS_DIR/uart1_ap.log \
     -C css.pl011_uart1_ap.unbuffered_output=1 \
     -C displayController=2 \
-    --data css.rss.cpu=${RSS_ROM_FILE}@0x11000000 \
+    -C css.rss.rom.raw_image=${RSS_ROM_FILE} \
     -C css.rss.VMADDRWIDTH=23 \
     -C css.rss.CMU0_NUM_DB_CH=16 \
     -C css.scp.c0_pik.rvbaraddr_lw=0x1000 \

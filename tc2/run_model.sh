@@ -36,7 +36,7 @@ help_text () {
 	echo "<path_to_run_model.sh> [OPTIONS]"
 	echo "OPTIONS:"
 	echo "-m, --model				path to model"
-	echo "-d, --distro				distro version, values supported [buildroot, android-swr]"
+	echo "-d, --distro				distro version, values supported [buildroot, android-fvp]"
 	echo "-a, --avb				[OPTIONAL] avb boot, values supported [true, false], DEFAULT: false"
 	echo "-t, --tap-interface			[OPTIONAL] tap interface"
 	echo "-n, --networking			[OPTIONAL] networking, values supported [user, tap, none]"
@@ -155,8 +155,8 @@ case $DISTRO in
         FIP_IMAGE_FILE="$DEPLOY_DIR/fip_gpt-tc.bin"
         RSS_ROM_FILE="$DEPLOY_DIR/rss_rom.bin"
         ;;
-    android-swr)
-		DISTRO_MODEL_PARAMS="-C board.mmc.p_mmc_file=$DEPLOY_DIR/android.img"
+    android-fvp)
+		DISTRO_MODEL_PARAMS="-C board.virtioblockdevice.image_path=$DEPLOY_DIR/android.img"
 		[ "$AVB" == true ] || DISTRO_MODEL_PARAMS="$DISTRO_MODEL_PARAMS \
 			--data board.dram=$DEPLOY_DIR/ramdisk_uboot.img@0x8000000 \
 			--data board.dram=$DEPLOY_DIR/Image@0x80000 "

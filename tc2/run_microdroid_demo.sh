@@ -35,7 +35,7 @@ ANDROID_HOST_BIN=""
 TC_APK_INSTALLED_PATH=""
 
 TC_DEVICE_PORT="127.0.0.1:5555"
-TC_PRODUCT_NAME="tc_swr"
+TC_PRODUCT_NAME="tc_fvp"
 TC_MICRODROID_DEMO_PACKAGE_NAME="com.android.microdroid.tc"
 
 tc_adb_error_exit() {

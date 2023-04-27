@@ -142,7 +142,7 @@ if [ ! -f "$MODEL" ]; then
     exit 1
 fi
 
-DEPLOY_DIR=$RUN_SCRIPTS_DIR/../../build-scripts/output/deploy/tc2/
+DEPLOY_DIR=$RUN_SCRIPTS_DIR/../../output/${DISTRO}/deploy/tc2/
 DEB_MMC_IMAGE_NAME=debian_fs.img
 
 check_dir_exists_and_exit $DEPLOY_DIR "firmware and kernel images"

@@ -145,8 +145,7 @@ if [ ! -f "$MODEL" ]; then
 fi
 
 DEPLOY_DIR=$RUN_SCRIPTS_DIR/../../build-scripts/output/deploy/tc2/
-DEB_VIRTIO_IMAGE_PATH=$RUN_SCRIPTS_DIR/../../build-scripts/output/tmp_build/debian/virtIO
-DEB_VIRTIO_IMAGE_NAME=debian_disk_image
+DEB_MMC_IMAGE_NAME=debian_fs.img
 
 check_dir_exists_and_exit $DEPLOY_DIR "firmware and kernel images"
 
@@ -173,7 +172,7 @@ case $DISTRO in
         ;;
      debian)
         DISTRO_MODEL_PARAMS="--data board.dram=${DEPLOY_DIR}/Image@0x80000 \
-                    -C board.virtioblockdevice.image_path=$DEB_VIRTIO_IMAGE_PATH/$DEB_VIRTIO_IMAGE_NAME"
+                    -C board.mmc.p_mmc_file=$DEPLOY_DIR/$DEB_MMC_IMAGE_NAME"
         BL1_IMAGE_FILE="$DEPLOY_DIR/bl1-tc.bin"
         FIP_IMAGE_FILE="$DEPLOY_DIR/fip_gpt-tc.bin"
         RSS_ROM_FILE="$DEPLOY_DIR/rss_rom.bin"

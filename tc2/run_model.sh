@@ -41,7 +41,7 @@ help_text () {
 	echo "-t, --tap-interface			[OPTIONAL] tap interface"
 	echo "-n, --networking			[OPTIONAL] networking, values supported [user, tap, none]"
 	echo "					DEFAULT: tap if tap interface provided, otherwise user"
-	echo "-e, --extra-model-params		[OPTIONAL] extra model parameters"
+	echo "--					[OPTIONAL] After -- pass all further options directly to the model"
 	exit 1
 }
 
@@ -114,11 +114,6 @@ do
 		    shift
 		    shift
 		    ;;
-	    -e|--extra-model-params)
-		    EXTRA_MODEL_PARAMS="$2"
-		    shift
-		    shift
-		    ;;
 	    -a|--avb)
 		    AVB="$2"
 		    shift
@@ -126,6 +121,10 @@ do
 		    ;;
 	    -h|--help)
 		    help_text
+		    ;;
+	    --)
+		    shift
+		    break
 		    ;;
 		*)
 			incorrect_script_use
@@ -136,7 +135,6 @@ done
 [ -z "$DISTRO" ] && incorrect_script_use || echo "DISTRO=$DISTRO"
 echo "TAP_INTERFACE=$TAP_INTERFACE"
 echo "NETWORKING=$NETWORKING"
-echo "EXTRA_MODEL_PARAMS=$EXTRA_MODEL_PARAMS"
 echo "AVB=$AVB"
 
 if [ ! -f "$MODEL" ]; then
@@ -214,6 +212,8 @@ rm -f $LATEST_LOGS
 mkdir -p $BOOT_LOGS_DIR
 ln -s $BOOT_LOGS_DIR $LATEST_LOGS
 
+set -x
+
 "$MODEL" \
     -C board.flashloader0.fname=${FIP_IMAGE_FILE} \
     -C soc.pl011_uart0.out_file=$BOOT_LOGS_DIR/uart0_soc.log \
@@ -230,6 +230,6 @@ ln -s $BOOT_LOGS_DIR $LATEST_LOGS
     -C css.scp.c0_pik.rvbaraddr_up=0x0000 \
     ${NETWORKING_MODEL_PARAMS} \
     ${DISTRO_MODEL_PARAMS} \
-    ${EXTRA_MODEL_PARAMS}
+    "$@"
 
 exit $?

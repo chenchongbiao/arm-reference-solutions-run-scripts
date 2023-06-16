@@ -226,8 +226,6 @@ set -x
     -C css.rss.rom.raw_image=${RSS_ROM_FILE} \
     -C css.rss.VMADDRWIDTH=23 \
     -C css.rss.CMU0_NUM_DB_CH=16 \
-    -C css.scp.c0_pik.rvbaraddr_lw=0x1000 \
-    -C css.scp.c0_pik.rvbaraddr_up=0x0000 \
     ${NETWORKING_MODEL_PARAMS} \
     ${DISTRO_MODEL_PARAMS} \
     "$@"

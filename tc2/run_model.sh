@@ -153,6 +153,8 @@ case $DISTRO in
         BL1_IMAGE_FILE="$DEPLOY_DIR/bl1-tc.bin"
         FIP_IMAGE_FILE="$DEPLOY_DIR/fip_gpt-tc.bin"
         RSS_ROM_FILE="$DEPLOY_DIR/rss_rom.bin"
+	RSS_CM_PROV_BUNDLE="$DEPLOY_DIR/rss_encrypted_cm_provisioning_bundle_0.bin"
+	RSS_DM_PROV_BUNDLE="$DEPLOY_DIR/rss_encrypted_dm_provisioning_bundle.bin"
         ;;
     android-fvp)
 		DISTRO_MODEL_PARAMS="-C board.virtioblockdevice.image_path=$DEPLOY_DIR/android.img"
@@ -162,6 +164,8 @@ case $DISTRO in
         BL1_IMAGE_FILE="$DEPLOY_DIR/bl1-trusty-tc.bin"
         FIP_IMAGE_FILE="$DEPLOY_DIR/fip-trusty-tc.bin"
         RSS_ROM_FILE="$DEPLOY_DIR/rss_trusty_rom.bin"
+	RSS_CM_PROV_BUNDLE="$DEPLOY_DIR/rss_trusty_encrypted_cm_provisioning_bundle_0.bin"
+	RSS_DM_PROV_BUNDLE="$DEPLOY_DIR/rss_trusty_encrypted_dm_provisioning_bundle.bin"
 
 	DISTRO_MODEL_PARAMS="${DISTRO_MODEL_PARAMS} \
 	-C board.smsc_91c111.enabled=1 \
@@ -174,6 +178,8 @@ case $DISTRO in
         BL1_IMAGE_FILE="$DEPLOY_DIR/bl1-tc.bin"
         FIP_IMAGE_FILE="$DEPLOY_DIR/fip_gpt-tc.bin"
         RSS_ROM_FILE="$DEPLOY_DIR/rss_rom.bin"
+	RSS_CM_PROV_BUNDLE="$DEPLOY_DIR/rss_encrypted_cm_provisioning_bundle_0.bin"
+	RSS_DM_PROV_BUNDLE="$DEPLOY_DIR/rss_encrypted_dm_provisioning_bundle.bin"
         ;;
 
     *) echo "bad option for distro $3"; incorrect_script_use
@@ -224,8 +230,10 @@ set -x
     -C css.pl011_uart1_ap.unbuffered_output=1 \
     -C displayController=2 \
     -C css.rss.rom.raw_image=${RSS_ROM_FILE} \
-    -C css.rss.VMADDRWIDTH=23 \
+    -C css.rss.VMADDRWIDTH=19 \
     -C css.rss.CMU0_NUM_DB_CH=16 \
+    --data css.rss.sram0=${RSS_CM_PROV_BUNDLE}@0x0 \
+    --data css.rss.sram1=${RSS_DM_PROV_BUNDLE}@0x80000 \
     ${NETWORKING_MODEL_PARAMS} \
     ${DISTRO_MODEL_PARAMS} \
     "$@"

@@ -234,6 +234,9 @@ set -x
     -C css.rss.CMU0_NUM_DB_CH=16 \
     --data css.rss.sram0=${RSS_CM_PROV_BUNDLE}@0x0 \
     --data css.rss.sram1=${RSS_DM_PROV_BUNDLE}@0x80000 \
+    -C css.cluster0.subcluster0.has_ete=1 \
+    -C css.cluster0.subcluster1.has_ete=1 \
+    -C css.cluster0.subcluster2.has_ete=1 \
     ${NETWORKING_MODEL_PARAMS} \
     ${DISTRO_MODEL_PARAMS} \
     "$@"

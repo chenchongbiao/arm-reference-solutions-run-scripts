@@ -142,6 +142,10 @@ if [ ! -f "$MODEL" ]; then
     exit 1
 fi
 
+echo
+echo "Launching model: "`basename $MODEL`
+$MODEL --version
+
 DEPLOY_DIR=$RUN_SCRIPTS_DIR/../../output/${DISTRO}/deploy/tc2/
 DEB_MMC_IMAGE_NAME=debian_fs.img
 

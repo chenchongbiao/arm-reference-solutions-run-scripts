@@ -170,11 +170,6 @@ case $DISTRO in
         RSS_ROM_FILE="$DEPLOY_DIR/rss_trusty_rom.bin"
 	RSS_CM_PROV_BUNDLE="$DEPLOY_DIR/rss_trusty_encrypted_cm_provisioning_bundle_0.bin"
 	RSS_DM_PROV_BUNDLE="$DEPLOY_DIR/rss_trusty_encrypted_dm_provisioning_bundle.bin"
-
-	DISTRO_MODEL_PARAMS="${DISTRO_MODEL_PARAMS} \
-	-C board.smsc_91c111.enabled=1 \
-	-C board.hostbridge.userNetworking=1 \
-	-C board.hostbridge.userNetPorts=\"5555=5555,8080=80,8022=22\""
         ;;
      debian)
         DISTRO_MODEL_PARAMS="--data board.dram=${DEPLOY_DIR}/Image@0x80000 \

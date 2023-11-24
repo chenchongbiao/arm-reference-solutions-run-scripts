@@ -36,7 +36,7 @@ help_text () {
 	echo "<path_to_run_model.sh> [OPTIONS]"
 	echo "OPTIONS:"
 	echo "-m, --model				path to model"
-	echo "-d, --distro				distro version, values supported [buildroot, android-fvp, debian]"
+	echo "-d, --distro				distro version, values supported [buildroot, android-fvp, debian, deepin]"
 	echo "-a, --avb				[OPTIONAL] avb boot, values supported [true, false], DEFAULT: false"
 	echo "-t, --tap-interface			[OPTIONAL] tap interface"
 	echo "-n, --networking			[OPTIONAL] networking, values supported [user, tap, none]"
@@ -171,15 +171,24 @@ case $DISTRO in
 	RSS_CM_PROV_BUNDLE="$DEPLOY_DIR/rss_trusty_encrypted_cm_provisioning_bundle_0.bin"
 	RSS_DM_PROV_BUNDLE="$DEPLOY_DIR/rss_trusty_encrypted_dm_provisioning_bundle.bin"
         ;;
-     debian)
+    debian)
         DISTRO_MODEL_PARAMS="--data board.dram=${DEPLOY_DIR}/Image@0x80000 \
                     -C board.mmc.p_mmc_file=$DEPLOY_DIR/$DEB_MMC_IMAGE_NAME"
         BL1_IMAGE_FILE="$DEPLOY_DIR/bl1-tc.bin"
-        FIP_IMAGE_FILE="$DEPLOY_DIR/fip_gpt-tc.bin"
+        FIP_IMAGE_FILE="$DEPLOY_DIR/fip_gpt-tc.bin"dp
         RSS_ROM_FILE="$DEPLOY_DIR/rss_rom.bin"
-	RSS_CM_PROV_BUNDLE="$DEPLOY_DIR/rss_encrypted_cm_provisioning_bundle_0.bin"
+	RSS_CM_PROV_BUNDLE="$DEPLOY_DIR/rss_encrypted_cm_provisioning_bundle_0.bn"
 	RSS_DM_PROV_BUNDLE="$DEPLOY_DIR/rss_encrypted_dm_provisioning_bundle.bin"
         ;;
+	deepin)
+		DISTRO_MODEL_PARAMS="--data board.dram=${DEPLOY_DIR}/Image@0x80000 \
+                    -C board.mmc.p_mmc_file=$DEPLOY_DIR/deepin_fs.img"
+        BL1_IMAGE_FILE="$DEPLOY_DIR/bl1-tc.bin"
+        FIP_IMAGE_FILE="$DEPLOY_DIR/fip_gpt-tc.bin"
+        RSS_ROM_FILE="$DEPLOY_DIR/rss_rom.bin"
+		RSS_CM_PROV_BUNDLE="$DEPLOY_DIR/rss_encrypted_cm_provisioning_bundle_0.bin"
+		RSS_DM_PROV_BUNDLE="$DEPLOY_DIR/rss_encrypted_dm_provisioning_bundle.bin"
+		;;
 
     *) echo "bad option for distro $3"; incorrect_script_use
         ;;
